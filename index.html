@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Covirán Avisos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f5f7;
+      margin: 0;
+      padding: 24px;
+      text-align: center;
+    }
+    .panel {
+      max-width: 460px;
+      margin: 60px auto;
+      background: white;
+      padding: 30px 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px #0001;
+    }
+    h1 { color: #087d40; }
+    button {
+      background: #087d40;
+      color: white;
+      border: 0;
+      border-radius: 9px;
+      padding: 15px 24px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #estado { margin-top: 22px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <main class="panel">
+    <h1>Covirán Avisos</h1>
+    <p>Centro de notificaciones de las Web Apps</p>
+    <button id="activar">Activar notificaciones</button>
+    <p id="estado">Pendiente de activación</p>
+  </main>
+
+  <script>
+    const boton = document.getElementById("activar");
+    const estado = document.getElementById("estado");
+
+    boton.addEventListener("click", async () => {
+      if (!("Notification" in window) ||
+          !("serviceWorker" in navigator)) {
+        estado.textContent =
+          "Este navegador no admite las funciones necesarias.";
+        return;
+      }
+
+      try {
+        const permiso = await Notification.requestPermission();
+
+        if (permiso === "granted") {
+          estado.textContent =
+            "Permiso concedido. Pendiente de conectar Firebase.";
+        } else {
+          estado.textContent =
+            "No se han autorizado las notificaciones.";
+        }
+      } catch (error) {
+        estado.textContent =
+          "No se pudo solicitar el permiso: " + error.message;
+      }
+    });
+  </script>
+</body>
+</html>
